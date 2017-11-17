@@ -1,7 +1,6 @@
 set number
 set title
 set showmatch
-syntax on
 set expandtab
 set tabstop=4
 set shiftwidth=4
@@ -10,6 +9,20 @@ inoremap <silent> jj <ESC>
 set hlsearch
 set clipboard=unnamedplus
 set showcmd
+set wrap
+
+" 開いているpython scriptをvim内から実行
+autocmd BufNewFile,BufRead *.py nnoremap <C-e> :!python %
+
+"color scheme
+set t_Co=256
+colorscheme desert
+"colorscheme kalisi
+"colorscheme tender
+"set background=dark
+
+" vimを立ち上げたときに、自動的にvim-indent-guidesをオンにする
+let g:indent_guides_enable_on_vim_startup = 1
 
 "dein.vim setting
 let s:dein_dir = expand('~/.cache/dein')
@@ -27,17 +40,13 @@ endif
     " 設定開始
 if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
-
-    " プラグインリストを収めた TOML ファイル
-    " 予め TOML ファイル（後述）を用意しておく
-    let g:rc_dir    = expand('~/.vim/rc')
-    let s:toml      = g:rc_dir . '/dein.toml'
-    let s:lazy_toml = g:rc_dir . '/dein_lazy.toml'
-
-    " TOML を読み込み、キャッシュしておく
-    call dein#load_toml(s:toml,      {'lazy': 0})
-    call dein#load_toml(s:lazy_toml, {'lazy': 1})
-
+    
+    call dein#add('Shougo/dein.vim')
+    call dein#add('Shougo/neocomplete.vim')
+    call dein#add('Shougo/unite.vim')
+    call dein#add('Shougo/neomru.vim')
+    call dein#add('davidhalter/jedi-vim', {'on_ft' : 'python'})
+    call dein#add('nathanaelkane/vim-indent-guides')
     " 設定終了
     call dein#end()
     call dein#save_state()
@@ -47,3 +56,10 @@ endif
 if dein#check_install()
     call dein#install()
 endif
+
+"参照：http://chakku.hatenablog.com/entry/2016/02/08/234128
+if &term =~ '256color'
+    set t_ut=
+endif
+
+syntax on
